@@ -5,7 +5,7 @@ import (
 )
 
 type Bank struct {
-	ID           string
+	ID           string `bson:"_id" json:"id,omitempty"`
 	InitialValue float64
 	CurrentValue float64
 	CreatedAt    time.Time

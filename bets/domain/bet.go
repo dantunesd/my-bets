@@ -3,7 +3,7 @@ package domain
 import "time"
 
 type Bet struct {
-	ID        string
+	ID        string `bson:"_id" json:"id,omitempty"`
 	BankID    string
 	Market    string
 	Event     string
