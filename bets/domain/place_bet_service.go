@@ -18,3 +18,9 @@ func (p *PlaceABetService) PlaceABet(bet Bet, bank *Bank) error {
 
 	return nil
 }
+
+func (p *PlaceABetService) UndoABet(bet Bet, bank *Bank) error {
+	bank.UpdateBank(-bet.Result, bet.CreatedAt)
+
+	return nil
+}

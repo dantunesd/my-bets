@@ -21,7 +21,7 @@ func TestPlaceABet(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "should return a bank updated",
+			name: "should update the bank",
 			args: args{
 				Bet{
 					Result:    5,
@@ -40,7 +40,7 @@ func TestPlaceABet(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "should return an error and the bank not updated if the result is not valid",
+			name: "should return an error and not update the bank if the result is not valid",
 			args: args{
 				Bet{
 					Value:     5,
@@ -59,7 +59,7 @@ func TestPlaceABet(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "should return an error and the bank not updated if the bet value is higher than the bank currentValue",
+			name: "should return an error and not update the bank if the bet value is higher than the bank currentValue",
 			args: args{
 				Bet{
 					Value:     150,
@@ -84,7 +84,54 @@ func TestPlaceABet(t *testing.T) {
 			err := p.PlaceABet(tt.args.bet, tt.args.bank)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("PlaceABet() error = %v, wantErr %v", err, tt.wantErr)
-				return
+			}
+			if !reflect.DeepEqual(tt.args.bank, tt.want) {
+				t.Errorf("PlaceABet() = %v, want %v", tt.args.bank, tt.want)
+			}
+		})
+	}
+}
+
+func TestPlaceABetService_UndoABet(t *testing.T) {
+	initialDate := time.Now()
+	finalDate := initialDate.Add(time.Second * 10)
+
+	type args struct {
+		bet  Bet
+		bank *Bank
+	}
+	tests := []struct {
+		name    string
+		p       *PlaceABetService
+		args    args
+		want    *Bank
+		wantErr bool
+	}{
+		{
+			name: "should update to bank undoing the result",
+			args: args{
+				Bet{
+					Result:    5,
+					Value:     5,
+					CreatedAt: finalDate,
+				},
+				&Bank{
+					CurrentValue: 100,
+					UpdatedAt:    initialDate,
+				},
+			},
+			want: &Bank{
+				CurrentValue: 95,
+				UpdatedAt:    finalDate,
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &PlaceABetService{}
+			if err := p.UndoABet(tt.args.bet, tt.args.bank); (err != nil) != tt.wantErr {
+				t.Errorf("PlaceABetService.UndoABet() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			if !reflect.DeepEqual(tt.args.bank, tt.want) {
 				t.Errorf("PlaceABet() = %v, want %v", tt.args.bank, tt.want)
