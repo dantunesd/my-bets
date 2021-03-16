@@ -12,12 +12,12 @@ func TestPlaceABet(t *testing.T) {
 
 	type args struct {
 		bet  Bet
-		bank Bank
+		bank *Bank
 	}
 	tests := []struct {
 		name    string
 		args    args
-		want    Bank
+		want    *Bank
 		wantErr bool
 	}{
 		{
@@ -28,12 +28,12 @@ func TestPlaceABet(t *testing.T) {
 					Value:     5,
 					CreatedAt: finalDate,
 				},
-				Bank{
+				&Bank{
 					CurrentValue: 100,
 					UpdatedAt:    initialDate,
 				},
 			},
-			want: Bank{
+			want: &Bank{
 				CurrentValue: 105,
 				UpdatedAt:    finalDate,
 			},
@@ -47,12 +47,12 @@ func TestPlaceABet(t *testing.T) {
 					Result:    -10,
 					CreatedAt: finalDate,
 				},
-				Bank{
+				&Bank{
 					CurrentValue: 100,
 					UpdatedAt:    initialDate,
 				},
 			},
-			want: Bank{
+			want: &Bank{
 				CurrentValue: 100,
 				UpdatedAt:    initialDate,
 			},
@@ -66,12 +66,12 @@ func TestPlaceABet(t *testing.T) {
 					Result:    0,
 					CreatedAt: finalDate,
 				},
-				Bank{
+				&Bank{
 					CurrentValue: 100,
 					UpdatedAt:    initialDate,
 				},
 			},
-			want: Bank{
+			want: &Bank{
 				CurrentValue: 100,
 				UpdatedAt:    initialDate,
 			},
@@ -81,13 +81,13 @@ func TestPlaceABet(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := &PlaceABetService{}
-			got, err := p.PlaceABet(tt.args.bet, tt.args.bank)
+			err := p.PlaceABet(tt.args.bet, tt.args.bank)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("PlaceABet() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("PlaceABet() = %v, want %v", got, tt.want)
+			if !reflect.DeepEqual(tt.args.bank, tt.want) {
+				t.Errorf("PlaceABet() = %v, want %v", tt.args.bank, tt.want)
 			}
 		})
 	}

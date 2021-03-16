@@ -97,13 +97,13 @@ func TestBank_UpdateBank(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			b := &Bank{
-				ID:           tt.fields.ID,
-				InitialValue: tt.fields.initialValue,
-				CurrentValue: tt.fields.currentValue,
-				CreatedAt:    tt.fields.createdAt,
-				UpdatedAt:    tt.fields.updatedAt,
-			}
+			b := NewBank(
+				tt.fields.ID,
+				tt.fields.initialValue,
+				tt.fields.currentValue,
+				tt.fields.createdAt,
+				tt.fields.updatedAt,
+			)
 			if b.UpdateBank(tt.args.value, tt.args.updatedAt); !reflect.DeepEqual(b, tt.want) {
 				t.Errorf("Bank.UpdateBank() = %v, want %v", b, tt.want)
 			}

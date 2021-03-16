@@ -65,17 +65,17 @@ func TestBet_IsValidResult(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			b := &Bet{
-				ID:        tt.fields.ID,
-				BankID:    tt.fields.BankID,
-				Market:    tt.fields.Market,
-				Event:     tt.fields.Event,
-				EventDate: tt.fields.EventDate,
-				Value:     tt.fields.Value,
-				Result:    tt.fields.Result,
-				Odd:       tt.fields.Odd,
-				CreatedAt: tt.fields.CreatedAt,
-			}
+			b := NewBet(
+				tt.fields.ID,
+				tt.fields.BankID,
+				tt.fields.Market,
+				tt.fields.Event,
+				tt.fields.EventDate,
+				tt.fields.Value,
+				tt.fields.Result,
+				tt.fields.Odd,
+				tt.fields.CreatedAt,
+			)
 			if got := b.IsValidResult(); got != tt.want {
 				t.Errorf("Bet.IsValidResult() = %v, want %v", got, tt.want)
 			}
