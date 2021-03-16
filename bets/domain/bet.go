@@ -3,15 +3,15 @@ package domain
 import "time"
 
 type Bet struct {
-	ID        string `bson:"_id" json:"id,omitempty"`
-	BankID    string
-	Market    string
-	Event     string
-	EventDate time.Time
-	Value     float64
-	Result    float64
-	Odd       float64
-	CreatedAt time.Time
+	ID        string    `bson:"_id" json:"id"`
+	BankID    string    `json:"bank_id"`
+	Market    string    `json:"market"`
+	Event     string    `json:"event"`
+	EventDate time.Time `json:"event_aate"`
+	Value     float64   `json:"value"`
+	Result    float64   `json:"result"`
+	Odd       float64   `json:"odd"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 func NewBet(id, bankId, market, event string, eventDate time.Time, value, result, odd float64, createdAt time.Time) *Bet {

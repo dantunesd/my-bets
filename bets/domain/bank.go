@@ -5,11 +5,11 @@ import (
 )
 
 type Bank struct {
-	ID           string `bson:"_id" json:"id,omitempty"`
-	InitialValue float64
-	CurrentValue float64
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
+	ID           string    `bson:"_id" json:"id"`
+	InitialValue float64   `json:"initial_value"`
+	CurrentValue float64   `json:"current_value"`
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
 }
 
 func NewBank(id string, initialValue, currentValue float64, createdAt, updatedAt time.Time) *Bank {
