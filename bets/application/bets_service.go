@@ -18,20 +18,24 @@ func NewBetsService(pbService domain.IPlaceABet, bankRepository, betRepository I
 	}
 }
 
-func (b *BetsService) PlaceABet(bet domain.Bet) error {
+func (b *BetsService) PlaceABet(bet domain.Bet) (domain.Bet, error) {
 	var bank domain.Bank
 
-	if gerr := b.BankRepository.Get(bet.BankID, bank); gerr != nil {
-		return gerr
+	if gerr := b.BankRepository.Get(bet.BankID, &bank); gerr != nil {
+		return bet, gerr
 	}
 
 	if perr := b.PbService.PlaceABet(bet, &bank); perr != nil {
-		return perr
+		return bet, perr
 	}
 
 	if cerr := b.BetRepository.Create(bet); cerr != nil {
-		return cerr
+		return bet, cerr
 	}
 
-	return b.BankRepository.Update(bank.ID, bank)
+	if uerr := b.BankRepository.Update(bank.ID, bank); uerr != nil {
+		return bet, uerr
+	}
+
+	return bet, nil
 }
