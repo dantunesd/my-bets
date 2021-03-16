@@ -31,7 +31,10 @@ func (b *BankRepository) Update(id string, content interface{}) error {
 	collection := b.Client.Database("my-bets").Collection("banks")
 
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
+	update := bson.M{
+		"$set": content,
+	}
 
-	_, err := collection.UpdateOne(context.TODO(), filter, content)
+	_, err := collection.UpdateOne(context.TODO(), filter, update)
 	return err
 }
