@@ -12,6 +12,16 @@ type Bank struct {
 	UpdatedAt    time.Time
 }
 
+func NewBank(id string, initialValue, currentValue float64, createdAt, updatedAt time.Time) *Bank {
+	return &Bank{
+		ID:           id,
+		InitialValue: initialValue,
+		CurrentValue: currentValue,
+		CreatedAt:    createdAt,
+		UpdatedAt:    updatedAt,
+	}
+}
+
 func InitializeANewBank(id string, initialValue float64, createdAt time.Time) *Bank {
 	return &Bank{
 		ID:           id,
