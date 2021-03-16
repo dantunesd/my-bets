@@ -2,7 +2,9 @@ package domain
 
 import "errors"
 
-func PlaceABet(bet Bet, bank Bank) (Bank, error) {
+type PlaceABetService struct{}
+
+func (p *PlaceABetService) PlaceABet(bet Bet, bank Bank) (Bank, error) {
 
 	if !bet.IsValidResult() {
 		return bank, errors.New("the result is not valid")

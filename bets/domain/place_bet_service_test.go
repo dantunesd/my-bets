@@ -80,7 +80,8 @@ func TestPlaceABet(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := PlaceABet(tt.args.bet, tt.args.bank)
+			p := &PlaceABetService{}
+			got, err := p.PlaceABet(tt.args.bet, tt.args.bank)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("PlaceABet() error = %v, wantErr %v", err, tt.wantErr)
 				return
