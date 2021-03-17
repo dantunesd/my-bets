@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func TestInitializeANewBank(t *testing.T) {
+func TestNewBank(t *testing.T) {
 	createdAt := time.Now()
 	ID := uuid.New().String()
 
@@ -36,8 +36,8 @@ func TestInitializeANewBank(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := InitializeANewBank(tt.args.ID, tt.args.initialValue, tt.args.createdAt); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("InitializeANewBank() = %v, want %v", got, tt.want)
+			if got := NewBank(tt.args.ID, tt.args.initialValue, tt.args.createdAt); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewBank() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -97,13 +97,13 @@ func TestBank_UpdateBank(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			b := NewBank(
+			b := &Bank{
 				tt.fields.ID,
 				tt.fields.initialValue,
 				tt.fields.currentValue,
 				tt.fields.createdAt,
 				tt.fields.updatedAt,
-			)
+			}
 			if b.UpdateBank(tt.args.value, tt.args.updatedAt); !reflect.DeepEqual(b, tt.want) {
 				t.Errorf("Bank.UpdateBank() = %v, want %v", b, tt.want)
 			}

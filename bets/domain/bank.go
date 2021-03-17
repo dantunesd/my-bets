@@ -12,17 +12,7 @@ type Bank struct {
 	UpdatedAt    time.Time `json:"updated_at"`
 }
 
-func NewBank(id string, initialValue, currentValue float64, createdAt, updatedAt time.Time) *Bank {
-	return &Bank{
-		ID:           id,
-		InitialValue: initialValue,
-		CurrentValue: currentValue,
-		CreatedAt:    createdAt,
-		UpdatedAt:    updatedAt,
-	}
-}
-
-func InitializeANewBank(id string, initialValue float64, createdAt time.Time) *Bank {
+func NewBank(id string, initialValue float64, createdAt time.Time) *Bank {
 	return &Bank{
 		ID:           id,
 		InitialValue: initialValue,
