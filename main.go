@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
-	"my-bets/bets/api"
 	"my-bets/bets/application"
 	"my-bets/bets/domain"
 	"my-bets/bets/infrastructure"
+	"my-bets/bets/presentation"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -23,5 +23,5 @@ func main() {
 	banksService := application.NewBankService(&bankRepository)
 	betsService := application.NewBetsService(&placeABetService, &bankRepository, &betRepository)
 
-	api.CreateAndStartServer(banksService, betsService)
+	presentation.CreateAndStartServer(banksService, betsService)
 }
