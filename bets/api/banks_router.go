@@ -8,6 +8,13 @@ import (
 	"github.com/go-chi/chi"
 )
 
+func BanksRouter(banksService *application.BanksService) func(r chi.Router) {
+	return func(r chi.Router) {
+		r.Post("/", createBank(banksService))
+		r.Get("/{id}", getBank(banksService))
+	}
+}
+
 func createBank(banksService *application.BanksService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
@@ -34,12 +41,5 @@ func getBank(banksService *application.BanksService) http.HandlerFunc {
 		id := chi.URLParam(r, "id")
 		bank := banksService.GetABank(id)
 		responseWriter(w, http.StatusOK, bank)
-	}
-}
-
-func BanksRouter(banksService *application.BanksService) func(r chi.Router) {
-	return func(r chi.Router) {
-		r.Post("/", createBank(banksService))
-		r.Get("/{id}", getBank(banksService))
 	}
 }

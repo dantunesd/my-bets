@@ -9,6 +9,13 @@ import (
 	"github.com/go-chi/chi"
 )
 
+func BetsRouter(betsService *application.BetsService) func(r chi.Router) {
+	return func(r chi.Router) {
+		r.Post("/", placeABet(betsService))
+		r.Delete("/{id}", undoABet(betsService))
+	}
+}
+
 func placeABet(betsService *application.BetsService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
@@ -36,11 +43,5 @@ func undoABet(betsService *application.BetsService) http.HandlerFunc {
 			return
 		}
 		responseWriter(w, http.StatusOK, nil)
-	}
-}
-func BetsRouter(betsService *application.BetsService) func(r chi.Router) {
-	return func(r chi.Router) {
-		r.Post("/", placeABet(betsService))
-		r.Delete("/{id}", undoABet(betsService))
 	}
 }
