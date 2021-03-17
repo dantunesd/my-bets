@@ -2,6 +2,9 @@ package application
 
 import (
 	"my-bets/bets/domain"
+	"time"
+
+	"github.com/google/uuid"
 )
 
 type BetsService struct {
@@ -19,6 +22,9 @@ func NewBetsService(pbService domain.IPlaceABet, bankRepository, betRepository I
 }
 
 func (b *BetsService) PlaceABet(bet domain.Bet) (domain.Bet, error) {
+	bet.ID = uuid.NewString()
+	bet.CreatedAt = time.Now()
+
 	var bank domain.Bank
 
 	if gerr := b.BankRepository.Get(bet.BankID, &bank); gerr != nil {

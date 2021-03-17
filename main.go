@@ -2,14 +2,11 @@ package main
 
 import (
 	"context"
+	"my-bets/bets/api"
 	"my-bets/bets/application"
 	"my-bets/bets/domain"
 	"my-bets/bets/infrastructure"
-	"my-bets/bets/presentation"
-	"net/http"
 
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -23,15 +20,8 @@ func main() {
 	betRepository := infrastructure.BetRepository{Client: client}
 	placeABetService := domain.PlaceABetService{}
 
-	betsService := application.NewBetsService(&placeABetService, &bankRepository, &betRepository)
 	banksService := application.NewBankService(&bankRepository)
+	betsService := application.NewBetsService(&placeABetService, &bankRepository, &betRepository)
 
-	r := chi.NewRouter()
-
-	r.Use(middleware.Logger)
-	r.Use(middleware.Recoverer)
-	r.Route("/banks", presentation.BanksRouter(banksService))
-	r.Route("/bets", presentation.BetsRouter(betsService))
-
-	http.ListenAndServe(":8080", r)
+	api.CreateAndStartServer(banksService, betsService)
 }

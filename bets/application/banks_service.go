@@ -18,8 +18,7 @@ func NewBankService(bankRepository IRepository) *BanksService {
 }
 
 func (b *BanksService) CreateABank(initialValue float64) (domain.Bank, error) {
-	id := uuid.NewString()
-	bank := domain.InitializeANewBank(id, initialValue, time.Now())
+	bank := domain.InitializeANewBank(uuid.NewString(), initialValue, time.Now())
 
 	return *bank, b.BankRepository.Create(bank)
 }
