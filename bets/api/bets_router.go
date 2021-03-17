@@ -28,8 +28,19 @@ func placeABet(betsService *application.BetsService) http.HandlerFunc {
 	}
 }
 
+func undoABet(betsService *application.BetsService) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id := chi.URLParam(r, "id")
+		if err := betsService.UndoABet(id); err != nil {
+			responseWriter(w, http.StatusInternalServerError, ErrorResponse{err.Error()})
+			return
+		}
+		responseWriter(w, http.StatusOK, nil)
+	}
+}
 func BetsRouter(betsService *application.BetsService) func(r chi.Router) {
 	return func(r chi.Router) {
 		r.Post("/", placeABet(betsService))
+		r.Delete("/{id}", undoABet(betsService))
 	}
 }

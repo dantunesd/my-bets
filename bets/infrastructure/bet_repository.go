@@ -24,9 +24,18 @@ func (b *BetRepository) Get(id string, output interface{}) error {
 
 	filter := bson.D{primitive.E{Key: "_id", Value: id}}
 
-	return collection.FindOne(context.TODO(), filter).Decode(&output)
+	return collection.FindOne(context.TODO(), filter).Decode(output)
 }
 
 func (b *BetRepository) Update(id string, content interface{}) error {
 	return nil
+}
+
+func (b *BetRepository) Delete(id string) error {
+	collection := b.Client.Database("my-bets").Collection("bets")
+
+	filter := bson.D{primitive.E{Key: "_id", Value: id}}
+
+	_, err := collection.DeleteOne(context.TODO(), filter)
+	return err
 }

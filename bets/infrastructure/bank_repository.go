@@ -38,3 +38,12 @@ func (b *BankRepository) Update(id string, content interface{}) error {
 	_, err := collection.UpdateOne(context.TODO(), filter, update)
 	return err
 }
+
+func (b *BankRepository) Delete(id string) error {
+	collection := b.Client.Database("my-bets").Collection("banks")
+
+	filter := bson.D{primitive.E{Key: "_id", Value: id}}
+
+	_, err := collection.DeleteOne(context.TODO(), filter)
+	return err
+}

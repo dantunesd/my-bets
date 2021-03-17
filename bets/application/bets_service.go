@@ -45,3 +45,30 @@ func (b *BetsService) PlaceABet(bet domain.Bet) (domain.Bet, error) {
 
 	return bet, nil
 }
+
+func (b *BetsService) UndoABet(ID string) error {
+	var bet domain.Bet
+	var bank domain.Bank
+
+	if berr := b.BetRepository.Get(ID, &bet); berr != nil {
+		return berr
+	}
+
+	if gerr := b.BankRepository.Get(bet.BankID, &bank); gerr != nil {
+		return gerr
+	}
+
+	if perr := b.PbService.UndoABet(bet, &bank); perr != nil {
+		return perr
+	}
+
+	if derr := b.BetRepository.Delete(bet.ID); derr != nil {
+		return derr
+	}
+
+	if uerr := b.BankRepository.Update(bank.ID, bank); uerr != nil {
+		return uerr
+	}
+
+	return nil
+}
