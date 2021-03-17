@@ -19,6 +19,10 @@ func (p *PlaceABetService) PlaceABet(bet Bet, bank *Bank) error {
 		return errors.New("the bet value cannot be higher than the bank currentValue")
 	}
 
+	if bank.CurrentValue >= 500 && bet.free && bet.Result < 0 {
+		return nil
+	}
+
 	bank.UpdateBank(bet.Result, bet.CreatedAt)
 
 	return nil

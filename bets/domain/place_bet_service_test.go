@@ -40,6 +40,46 @@ func TestPlaceABet(t *testing.T) {
 			wantErr: false,
 		},
 		{
+			name: "should not update the bank when the bet is free and the bank is equal or higher than 500 and the result is negative",
+			args: args{
+				Bet{
+					Result:    -5,
+					Value:     5,
+					CreatedAt: finalDate,
+					free:      true,
+				},
+				&Bank{
+					CurrentValue: 500,
+					UpdatedAt:    initialDate,
+				},
+			},
+			want: &Bank{
+				CurrentValue: 500,
+				UpdatedAt:    initialDate,
+			},
+			wantErr: false,
+		},
+		{
+			name: "should update the bank when the bet is free and the bank is higher than 500 and the result is positive",
+			args: args{
+				Bet{
+					Result:    5,
+					Value:     5,
+					CreatedAt: finalDate,
+					free:      true,
+				},
+				&Bank{
+					CurrentValue: 500,
+					UpdatedAt:    initialDate,
+				},
+			},
+			want: &Bank{
+				CurrentValue: 505,
+				UpdatedAt:    finalDate,
+			},
+			wantErr: false,
+		},
+		{
 			name: "should return an error and not update the bank if the result is not valid",
 			args: args{
 				Bet{
