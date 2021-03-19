@@ -46,7 +46,7 @@ func TestPlaceABet(t *testing.T) {
 					Result:    -5,
 					Value:     5,
 					CreatedAt: finalDate,
-					free:      true,
+					Free:      true,
 				},
 				&Bank{
 					CurrentValue: 500,
@@ -66,7 +66,7 @@ func TestPlaceABet(t *testing.T) {
 					Result:    5,
 					Value:     5,
 					CreatedAt: finalDate,
-					free:      true,
+					Free:      true,
 				},
 				&Bank{
 					CurrentValue: 500,
