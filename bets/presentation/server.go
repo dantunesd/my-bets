@@ -8,7 +8,7 @@ import (
 	"github.com/go-chi/chi/middleware"
 )
 
-func CreateAndStartServer(banksService *application.BanksService, betsService *application.BetsService) {
+func CreateServer(banksService *application.BanksService, betsService *application.BetsService) http.Handler {
 	r := chi.NewRouter()
 
 	r.Use(middleware.Logger)
@@ -16,5 +16,5 @@ func CreateAndStartServer(banksService *application.BanksService, betsService *a
 	r.Route("/banks", BanksRouter(banksService))
 	r.Route("/bets", BetsRouter(betsService))
 
-	http.ListenAndServe(":8080", r)
+	return r
 }
