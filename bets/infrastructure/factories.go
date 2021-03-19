@@ -36,8 +36,8 @@ func BetServiceFactory() *application.BetsService {
 	)
 }
 
-func ServerFactory() http.Handler {
-	return presentation.CreateServer(
+func HandlersFactory() http.Handler {
+	return presentation.HandlersFactory(
 		BankServiceFactory(),
 		BetServiceFactory(),
 	)

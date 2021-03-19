@@ -8,7 +8,7 @@ import (
 	"github.com/go-chi/chi/middleware"
 )
 
-func CreateServer(banksService *application.BanksService, betsService *application.BetsService) http.Handler {
+func HandlersFactory(banksService *application.BanksService, betsService *application.BetsService) http.Handler {
 	r := chi.NewRouter()
 
 	r.Use(middleware.Logger)

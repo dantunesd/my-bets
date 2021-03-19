@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	http.ListenAndServe(":8080", infrastructure.ServerFactory())
+	http.ListenAndServe(":8080", infrastructure.HandlersFactory())
 }
