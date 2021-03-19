@@ -26,3 +26,7 @@ func (b *Bank) UpdateBank(value float64, updatedAt time.Time) {
 	b.CurrentValue = b.CurrentValue + value
 	b.UpdatedAt = updatedAt
 }
+
+func (b *Bank) isValidForFreeBets() bool {
+	return b.CurrentValue >= 500
+}

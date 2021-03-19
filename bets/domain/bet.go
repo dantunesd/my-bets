@@ -41,3 +41,7 @@ func (b *Bet) IsValidResult() bool {
 
 	return false
 }
+
+func (b *Bet) needApplyFreeBet() bool {
+	return b.Free && b.Result < 0
+}
