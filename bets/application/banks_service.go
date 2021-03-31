@@ -8,10 +8,10 @@ import (
 )
 
 type BanksService struct {
-	BankRepository IRepository
+	BankRepository IBanksRepository
 }
 
-func NewBankService(bankRepository IRepository) *BanksService {
+func NewBankService(bankRepository IBanksRepository) *BanksService {
 	return &BanksService{
 		BankRepository: bankRepository,
 	}
@@ -20,11 +20,9 @@ func NewBankService(bankRepository IRepository) *BanksService {
 func (b *BanksService) CreateABank(initialValue float64) (domain.Bank, error) {
 	bank := domain.NewBank(uuid.NewString(), initialValue, time.Now())
 
-	return *bank, b.BankRepository.Create(bank)
+	return *bank, b.BankRepository.CreateABank(*bank)
 }
 
-func (b *BanksService) GetABank(id string) domain.Bank {
-	var bank domain.Bank
-	b.BankRepository.Get(id, &bank)
-	return bank
+func (b *BanksService) GetABank(id string) (domain.Bank, error) {
+	return b.BankRepository.GetABank(id)
 }

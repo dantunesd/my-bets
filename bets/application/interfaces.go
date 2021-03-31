@@ -2,11 +2,16 @@ package application
 
 import "my-bets/bets/domain"
 
-type IRepository interface {
-	Create(content interface{}) error
-	Get(id string, output interface{}) error
-	Update(id string, content interface{}) error
-	Delete(id string) error
+type IBanksRepository interface {
+	CreateABank(domain.Bank) error
+	GetABank(id string) (domain.Bank, error)
+	UpdateABank(domain.Bank) error
+}
+
+type IBetsRepository interface {
+	CreateABet(domain.Bet) error
+	GetABet(id string) (domain.Bet, error)
+	DeleteABet(id string) error
 }
 
 type IPlaceABetService interface {

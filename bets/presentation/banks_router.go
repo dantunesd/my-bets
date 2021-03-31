@@ -39,7 +39,11 @@ func createBank(banksService *application.BanksService) http.HandlerFunc {
 func getBank(banksService *application.BanksService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id := chi.URLParam(r, "id")
-		bank := banksService.GetABank(id)
+		bank, err := banksService.GetABank(id)
+		if err != nil {
+			responseWriter(w, http.StatusInternalServerError, ErrorResponse{err.Error()})
+			return
+		}
 		responseWriter(w, http.StatusOK, bank)
 	}
 }

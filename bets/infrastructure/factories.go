@@ -16,12 +16,24 @@ func MongoClientFactory() *mongo.Client {
 	return client
 }
 
+func DatabaseFactory(dBName, tableName string) *Database {
+	return &Database{
+		Client:    MongoClientFactory(),
+		DBName:    dBName,
+		TableName: tableName,
+	}
+}
+
 func BankRepositoryFactory() *BankRepository {
-	return &BankRepository{Client: MongoClientFactory()}
+	return &BankRepository{
+		Database: DatabaseFactory("my-bets", "banks"),
+	}
 }
 
 func BetRepositoryFactory() *BetRepository {
-	return &BetRepository{Client: MongoClientFactory()}
+	return &BetRepository{
+		Database: DatabaseFactory("my-bets", "bets"),
+	}
 }
 
 func BankServiceFactory() *application.BanksService {

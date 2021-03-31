@@ -9,11 +9,11 @@ import (
 
 type BetsService struct {
 	PbService      IPlaceABetService
-	BankRepository IRepository
-	BetRepository  IRepository
+	BankRepository IBanksRepository
+	BetRepository  IBetsRepository
 }
 
-func NewBetsService(pbService IPlaceABetService, bankRepository, betRepository IRepository) *BetsService {
+func NewBetsService(pbService IPlaceABetService, bankRepository IBanksRepository, betRepository IBetsRepository) *BetsService {
 	return &BetsService{
 		PbService:      pbService,
 		BankRepository: bankRepository,
@@ -45,7 +45,7 @@ type PlaceBetDTO struct {
 	Free      bool      `json:"free"`
 }
 
-func (b *BetsService) PlaceABet(pbd PlaceBetDTO) (*BetDTO, error) {
+func (b *BetsService) PlaceABet(pbd PlaceBetDTO) (*domain.Bet, error) {
 	bet := domain.Bet{
 		ID:        uuid.NewString(),
 		BankID:    pbd.BankID,
@@ -59,9 +59,8 @@ func (b *BetsService) PlaceABet(pbd PlaceBetDTO) (*BetDTO, error) {
 		CreatedAt: time.Now(),
 	}
 
-	var bank domain.Bank
-
-	if gerr := b.BankRepository.Get(bet.BankID, &bank); gerr != nil {
+	bank, gerr := b.BankRepository.GetABank(bet.BankID)
+	if gerr != nil {
 		return nil, gerr
 	}
 
@@ -69,28 +68,25 @@ func (b *BetsService) PlaceABet(pbd PlaceBetDTO) (*BetDTO, error) {
 		return nil, perr
 	}
 
-	if cerr := b.BetRepository.Create(bet); cerr != nil {
+	if cerr := b.BetRepository.CreateABet(bet); cerr != nil {
 		return nil, cerr
 	}
 
-	if uerr := b.BankRepository.Update(bank.ID, bank); uerr != nil {
+	if uerr := b.BankRepository.UpdateABank(bank); uerr != nil {
 		return nil, uerr
 	}
 
-	betDTO := BetDTO(bet)
-
-	return &betDTO, nil
+	return &bet, nil
 }
 
 func (b *BetsService) UndoABet(ID string) error {
-	var bet domain.Bet
-	var bank domain.Bank
-
-	if berr := b.BetRepository.Get(ID, &bet); berr != nil {
+	bet, berr := b.BetRepository.GetABet(ID)
+	if berr != nil {
 		return berr
 	}
 
-	if gerr := b.BankRepository.Get(bet.BankID, &bank); gerr != nil {
+	bank, gerr := b.BankRepository.GetABank(bet.BankID)
+	if gerr != nil {
 		return gerr
 	}
 
@@ -98,11 +94,11 @@ func (b *BetsService) UndoABet(ID string) error {
 		return perr
 	}
 
-	if derr := b.BetRepository.Delete(bet.ID); derr != nil {
+	if derr := b.BetRepository.DeleteABet(bet.ID); derr != nil {
 		return derr
 	}
 
-	if uerr := b.BankRepository.Update(bank.ID, bank); uerr != nil {
+	if uerr := b.BankRepository.UpdateABank(bank); uerr != nil {
 		return uerr
 	}
 

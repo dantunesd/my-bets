@@ -1,49 +1,22 @@
 package infrastructure
 
-import (
-	"context"
+import "my-bets/bets/domain"
 
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
-)
+const bankIDKey = "_id"
 
 type BankRepository struct {
-	Client *mongo.Client
+	Database *Database
 }
 
-func (b *BankRepository) Create(content interface{}) error {
-	collection := b.Client.Database("my-bets").Collection("banks")
-
-	_, err := collection.InsertOne(context.TODO(), content)
-	return err
+func (b *BankRepository) CreateABank(bank domain.Bank) error {
+	return b.Database.Create(bank)
 }
 
-func (b *BankRepository) Get(id string, output interface{}) error {
-	collection := b.Client.Database("my-bets").Collection("banks")
-
-	filter := bson.D{primitive.E{Key: "_id", Value: id}}
-
-	return collection.FindOne(context.TODO(), filter).Decode(output)
+func (b *BankRepository) GetABank(id string) (domain.Bank, error) {
+	var bank domain.Bank
+	return bank, b.Database.Get(id, bankIDKey, &bank)
 }
 
-func (b *BankRepository) Update(id string, content interface{}) error {
-	collection := b.Client.Database("my-bets").Collection("banks")
-
-	filter := bson.D{primitive.E{Key: "_id", Value: id}}
-	update := bson.M{
-		"$set": content,
-	}
-
-	_, err := collection.UpdateOne(context.TODO(), filter, update)
-	return err
-}
-
-func (b *BankRepository) Delete(id string) error {
-	collection := b.Client.Database("my-bets").Collection("banks")
-
-	filter := bson.D{primitive.E{Key: "_id", Value: id}}
-
-	_, err := collection.DeleteOne(context.TODO(), filter)
-	return err
+func (b *BankRepository) UpdateABank(bank domain.Bank) error {
+	return b.Database.Update(bank.ID, bankIDKey, bank)
 }
