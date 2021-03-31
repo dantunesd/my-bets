@@ -24,33 +24,37 @@ func DatabaseFactory(dBName, tableName string) *Database {
 	}
 }
 
-func BankRepositoryFactory() *BankRepository {
-	return &BankRepository{
-		Database: DatabaseFactory("my-bets", "banks"),
-	}
+func BankRepositoryFactory() application.IBanksRepository {
+	return NewBankCacheDecorator(
+		&BankRepository{
+			Database: DatabaseFactory("my-bets", "banks"),
+		},
+	)
 }
 
-func BetRepositoryFactory() *BetRepository {
+func BetRepositoryFactory() application.IBetsRepository {
 	return &BetRepository{
 		Database: DatabaseFactory("my-bets", "bets"),
 	}
 }
 
-func BankServiceFactory() *application.BanksService {
-	return application.NewBankService(BankRepositoryFactory())
+func BankServiceFactory(bankRepository application.IBanksRepository) *application.BanksService {
+	return application.NewBankService(bankRepository)
 }
 
-func BetServiceFactory() *application.BetsService {
+func BetServiceFactory(bankRepository application.IBanksRepository) *application.BetsService {
 	return application.NewBetsService(
 		&domain.PlaceABetService{},
-		BankRepositoryFactory(),
+		bankRepository,
 		BetRepositoryFactory(),
 	)
 }
 
 func HandlersFactory() http.Handler {
+	bankRepository := BankRepositoryFactory()
+
 	return presentation.HandlersFactory(
-		BankServiceFactory(),
-		BetServiceFactory(),
+		BankServiceFactory(bankRepository),
+		BetServiceFactory(bankRepository),
 	)
 }
