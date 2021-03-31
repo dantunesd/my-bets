@@ -1,7 +1,6 @@
 package infrastructure
 
 import (
-	"fmt"
 	"my-bets/bets/domain"
 )
 
@@ -12,17 +11,14 @@ type BankRepository struct {
 }
 
 func (b *BankRepository) CreateABank(bank domain.Bank) error {
-	fmt.Println("creating data from store")
 	return b.Database.Create(bank)
 }
 
 func (b *BankRepository) GetABank(id string) (domain.Bank, error) {
-	fmt.Println("getting data from store")
 	var bank domain.Bank
 	return bank, b.Database.Get(id, bankIDKey, &bank)
 }
 
 func (b *BankRepository) UpdateABank(bank domain.Bank) error {
-	fmt.Println("updating data from store")
 	return b.Database.Update(bank.ID, bankIDKey, bank)
 }

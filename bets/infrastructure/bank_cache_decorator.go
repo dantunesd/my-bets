@@ -1,7 +1,6 @@
 package infrastructure
 
 import (
-	"fmt"
 	"my-bets/bets/application"
 	"my-bets/bets/domain"
 )
@@ -23,25 +22,20 @@ func (b *BankCacheDecorator) CreateABank(bank domain.Bank) error {
 		return err
 	}
 
-	fmt.Println("creating data from cache")
 	b.Bank[bank.ID] = bank
 	return nil
 }
 
 func (b *BankCacheDecorator) GetABank(id string) (domain.Bank, error) {
 	if cachedBank, existsInCache := b.Bank[id]; existsInCache {
-		fmt.Println("getting data from cache")
 		return cachedBank, nil
 	}
-
-	fmt.Println("data not found from cache")
 
 	storedBank, err := b.BanksRepository.GetABank(id)
 	if err != nil {
 		return storedBank, err
 	}
 
-	fmt.Println("creating data from cache")
 	b.Bank[storedBank.ID] = storedBank
 
 	return storedBank, nil
@@ -52,7 +46,6 @@ func (b *BankCacheDecorator) UpdateABank(bank domain.Bank) error {
 		return err
 	}
 
-	fmt.Println("updating data from cache")
 	b.Bank[bank.ID] = bank
 	return nil
 }
