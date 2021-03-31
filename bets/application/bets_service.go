@@ -21,19 +21,6 @@ func NewBetsService(pbService IPlaceABetService, bankRepository IBanksRepository
 	}
 }
 
-type BetDTO struct {
-	ID        string    `bson:"_id" json:"id"`
-	BankID    string    `json:"bank_id"`
-	Market    string    `json:"market"`
-	Event     string    `json:"event"`
-	EventDate time.Time `json:"event_date"`
-	Value     float64   `json:"value"`
-	Result    float64   `json:"result"`
-	Odd       float64   `json:"odd"`
-	CreatedAt time.Time `json:"created_at"`
-	Free      bool      `json:"free"`
-}
-
 type PlaceBetDTO struct {
 	BankID    string    `json:"bank_id"`
 	Market    string    `json:"market"`
