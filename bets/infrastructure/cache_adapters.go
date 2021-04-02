@@ -78,8 +78,8 @@ func (r *RedisCacheAdapter) Get(key string, output interface{}) bool {
 }
 
 func (r *RedisCacheAdapter) Update(key string, content interface{}) {
-
 	fmt.Println("updating in cache")
+
 	marshalledContet, _ := json.Marshal(content)
 	r.Client.Set(context.TODO(), key, marshalledContet, 0)
 }
