@@ -27,7 +27,7 @@ func DatabaseFactory(dBName, tableName string) IDatabase {
 func BankRepositoryFactory() application.IBanksRepository {
 	return NewBankRepositoryDecorator(
 		NewBankRepository(DatabaseFactory("my-bets", "banks")),
-		NewInMemoryCacheRepository(),
+		NewInMemoryCacheAdapter(),
 	)
 }
 
