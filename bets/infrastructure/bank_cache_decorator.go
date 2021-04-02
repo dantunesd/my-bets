@@ -6,13 +6,13 @@ import (
 )
 
 type BankCacheDecorator struct {
-	Bank            map[string]domain.Bank
+	CacheRepository ICacheRepository
 	BanksRepository application.IBanksRepository
 }
 
-func NewBankCacheDecorator(banksRepository application.IBanksRepository) *BankCacheDecorator {
+func NewBankCacheDecorator(banksRepository application.IBanksRepository, cacheRepository ICacheRepository) *BankCacheDecorator {
 	return &BankCacheDecorator{
-		Bank:            make(map[string]domain.Bank),
+		CacheRepository: cacheRepository,
 		BanksRepository: banksRepository,
 	}
 }
@@ -22,13 +22,14 @@ func (b *BankCacheDecorator) CreateABank(bank domain.Bank) error {
 		return err
 	}
 
-	b.Bank[bank.ID] = bank
-	return nil
+	return b.CacheRepository.Add(bank.ID, bank)
 }
 
 func (b *BankCacheDecorator) GetABank(id string) (domain.Bank, error) {
-	if cachedBank, existsInCache := b.Bank[id]; existsInCache {
-		return cachedBank, nil
+	cachedBank, existsInCache := b.CacheRepository.Get(id)
+
+	if existsInCache {
+		return cachedBank.(domain.Bank), nil
 	}
 
 	storedBank, err := b.BanksRepository.GetABank(id)
@@ -36,7 +37,7 @@ func (b *BankCacheDecorator) GetABank(id string) (domain.Bank, error) {
 		return storedBank, err
 	}
 
-	b.Bank[storedBank.ID] = storedBank
+	b.CacheRepository.Add(storedBank.ID, storedBank)
 
 	return storedBank, nil
 }
@@ -46,6 +47,6 @@ func (b *BankCacheDecorator) UpdateABank(bank domain.Bank) error {
 		return err
 	}
 
-	b.Bank[bank.ID] = bank
+	b.CacheRepository.Update(bank.ID, bank)
 	return nil
 }

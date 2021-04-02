@@ -5,7 +5,13 @@ import "my-bets/bets/domain"
 const betIDKey = "_id"
 
 type BetRepository struct {
-	Database *Database
+	Database IDatabase
+}
+
+func NewBetRepository(database IDatabase) *BetRepository {
+	return &BetRepository{
+		Database: database,
+	}
 }
 
 func (b *BetRepository) CreateABet(bet domain.Bet) error {

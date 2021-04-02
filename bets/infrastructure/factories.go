@@ -16,8 +16,8 @@ func MongoClientFactory() *mongo.Client {
 	return client
 }
 
-func DatabaseFactory(dBName, tableName string) *Database {
-	return &Database{
+func DatabaseFactory(dBName, tableName string) IDatabase {
+	return &MongoDB{
 		Client:    MongoClientFactory(),
 		DBName:    dBName,
 		TableName: tableName,
@@ -26,16 +26,13 @@ func DatabaseFactory(dBName, tableName string) *Database {
 
 func BankRepositoryFactory() application.IBanksRepository {
 	return NewBankCacheDecorator(
-		&BankRepository{
-			Database: DatabaseFactory("my-bets", "banks"),
-		},
+		NewBankRepository(DatabaseFactory("my-bets", "banks")),
+		NewInMemoryCacheRepository(),
 	)
 }
 
 func BetRepositoryFactory() application.IBetsRepository {
-	return &BetRepository{
-		Database: DatabaseFactory("my-bets", "bets"),
-	}
+	return NewBetRepository(DatabaseFactory("my-bets", "bets"))
 }
 
 func BankServiceFactory(bankRepository application.IBanksRepository) *application.BanksService {

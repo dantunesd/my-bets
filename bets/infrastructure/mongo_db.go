@@ -8,20 +8,20 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-type Database struct {
+type MongoDB struct {
 	Client    *mongo.Client
 	DBName    string
 	TableName string
 }
 
-func (d *Database) Create(content interface{}) error {
+func (d *MongoDB) Create(content interface{}) error {
 	collection := d.Client.Database(d.DBName).Collection(d.TableName)
 
 	_, err := collection.InsertOne(context.TODO(), content)
 	return err
 }
 
-func (d *Database) Get(id, idFieldName string, output interface{}) error {
+func (d *MongoDB) Get(id, idFieldName string, output interface{}) error {
 	collection := d.Client.Database(d.DBName).Collection(d.TableName)
 
 	filter := bson.D{primitive.E{Key: idFieldName, Value: id}}
@@ -29,7 +29,7 @@ func (d *Database) Get(id, idFieldName string, output interface{}) error {
 	return collection.FindOne(context.TODO(), filter).Decode(output)
 }
 
-func (d *Database) Update(id string, idFieldName string, content interface{}) error {
+func (d *MongoDB) Update(id string, idFieldName string, content interface{}) error {
 	collection := d.Client.Database(d.DBName).Collection(d.TableName)
 
 	filter := bson.D{primitive.E{Key: idFieldName, Value: id}}
@@ -41,7 +41,7 @@ func (d *Database) Update(id string, idFieldName string, content interface{}) er
 	return err
 }
 
-func (d *Database) Delete(id, idFieldName string) error {
+func (d *MongoDB) Delete(id, idFieldName string) error {
 	collection := d.Client.Database(d.DBName).Collection(d.TableName)
 
 	filter := bson.D{primitive.E{Key: idFieldName, Value: id}}
