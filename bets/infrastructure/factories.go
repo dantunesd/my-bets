@@ -7,6 +7,7 @@ import (
 	"my-bets/bets/presentation"
 	"net/http"
 
+	"github.com/go-redis/redis/v8"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -16,18 +17,27 @@ func MongoClientFactory() *mongo.Client {
 	return client
 }
 
+func RedisClientFactory() *redis.Client {
+	return redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
+}
+
 func DatabaseFactory(dBName, tableName string) IDatabase {
-	return &MongoDB{
-		Client:    MongoClientFactory(),
-		DBName:    dBName,
-		TableName: tableName,
-	}
+	return NewMongoDB(
+		MongoClientFactory(),
+		dBName,
+		tableName,
+	)
 }
 
 func BankRepositoryFactory() application.IBanksRepository {
 	return NewBankRepositoryDecorator(
 		NewBankRepository(DatabaseFactory("my-bets", "banks")),
-		NewInMemoryCacheAdapter(),
+		// NewInMemoryCacheAdapter(),
+		NewRedisCacheAdapter(RedisClientFactory()),
 	)
 }
 

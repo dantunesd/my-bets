@@ -8,10 +8,28 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+type IDatabase interface {
+	Create(content interface{}) error
+	Get(id, idFieldName string, output interface{}) error
+	Update(id string, idFieldName string, content interface{}) error
+	Delete(id, idFieldName string) error
+}
+
+//------------------------------------------------------------------------------
+// MongoDB Database
+//------------------------------------------------------------------------------
 type MongoDB struct {
 	Client    *mongo.Client
 	DBName    string
 	TableName string
+}
+
+func NewMongoDB(client *mongo.Client, dbName, tableName string) IDatabase {
+	return &MongoDB{
+		Client:    client,
+		DBName:    dbName,
+		TableName: tableName,
+	}
 }
 
 func (d *MongoDB) Create(content interface{}) error {
