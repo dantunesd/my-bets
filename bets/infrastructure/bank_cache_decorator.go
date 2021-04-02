@@ -37,9 +37,7 @@ func (b *BankCacheDecorator) GetABank(id string) (domain.Bank, error) {
 		return storedBank, err
 	}
 
-	b.CacheRepository.Add(storedBank.ID, storedBank)
-
-	return storedBank, nil
+	return storedBank, b.CacheRepository.Add(storedBank.ID, storedBank)
 }
 
 func (b *BankCacheDecorator) UpdateABank(bank domain.Bank) error {
@@ -47,6 +45,5 @@ func (b *BankCacheDecorator) UpdateABank(bank domain.Bank) error {
 		return err
 	}
 
-	b.CacheRepository.Update(bank.ID, bank)
-	return nil
+	return b.CacheRepository.Update(bank.ID, bank)
 }
