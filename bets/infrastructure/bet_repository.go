@@ -1,6 +1,9 @@
 package infrastructure
 
-import "my-bets/bets/domain"
+import (
+	"my-bets/bets/application"
+	"my-bets/bets/domain"
+)
 
 const betIDKey = "_id"
 
@@ -8,7 +11,7 @@ type BetRepository struct {
 	Database IDatabase
 }
 
-func NewBetRepository(database IDatabase) *BetRepository {
+func NewBetRepository(database IDatabase) application.IBetsRepository {
 	return &BetRepository{
 		Database: database,
 	}

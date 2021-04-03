@@ -8,9 +8,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-//------------------------------------------------------------------------------
-// MongoDBAdapter Database
-//------------------------------------------------------------------------------
 type MongoDBAdapter struct {
 	Client    *mongo.Client
 	DBName    string

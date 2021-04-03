@@ -10,7 +10,7 @@ type BankRepositoryDecorator struct {
 	BanksRepository application.IBanksRepository
 }
 
-func NewBankRepositoryDecorator(banksRepository application.IBanksRepository, cacheRepository ICache) *BankRepositoryDecorator {
+func NewBankRepositoryDecorator(banksRepository application.IBanksRepository, cacheRepository ICache) application.IBanksRepository {
 	return &BankRepositoryDecorator{
 		CacheRepository: cacheRepository,
 		BanksRepository: banksRepository,
