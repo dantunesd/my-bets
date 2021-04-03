@@ -26,18 +26,29 @@ func RedisClientFactory() *redis.Client {
 }
 
 func DatabaseFactory(dBName, tableName string) IDatabase {
-	return NewMongoDBAdapter(
-		MongoClientFactory(),
-		dBName,
-		tableName,
+	return NewLoggableDBDecorator(
+		NewMongoDBAdapter(
+			MongoClientFactory(),
+			dBName,
+			tableName,
+		),
+	)
+}
+
+func CacheFactory(selectedCache string) ICache {
+	availableCaches := map[string]ICache{
+		"redis":  NewRedisCacheAdapter(RedisClientFactory()),
+		"memory": NewMemoryCacheAdapter(),
+	}
+	return NewLoggableCacheDecorator(
+		availableCaches[selectedCache],
 	)
 }
 
 func BankRepositoryFactory() application.IBanksRepository {
 	return NewBankRepositoryDecorator(
 		NewBankRepository(DatabaseFactory("my-bets", "banks")),
-		// NewMemoryCacheAdapter(),
-		NewRedisCacheAdapter(RedisClientFactory()),
+		CacheFactory("redis"),
 	)
 }
 
