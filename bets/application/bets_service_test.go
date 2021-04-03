@@ -4,7 +4,6 @@ import (
 	"errors"
 	"my-bets/bets/domain"
 	"testing"
-	"time"
 )
 
 func TestBetsService_PlaceABet(t *testing.T) {
@@ -33,16 +32,7 @@ func TestBetsService_PlaceABet(t *testing.T) {
 				},
 			},
 			args: args{
-				pbd: PlaceBetDTO{
-					BankID:    "id",
-					Market:    "market",
-					Event:     "event",
-					EventDate: time.Now(),
-					Value:     1,
-					Result:    1,
-					Odd:       1,
-					Free:      false,
-				},
+				pbd: PlaceBetDTO{},
 			},
 			want:    nil,
 			wantErr: true,
@@ -62,16 +52,7 @@ func TestBetsService_PlaceABet(t *testing.T) {
 				},
 			},
 			args: args{
-				pbd: PlaceBetDTO{
-					BankID:    "id",
-					Market:    "market",
-					Event:     "event",
-					EventDate: time.Now(),
-					Value:     1,
-					Result:    1,
-					Odd:       1,
-					Free:      false,
-				},
+				pbd: PlaceBetDTO{},
 			},
 			want:    nil,
 			wantErr: true,
@@ -96,16 +77,7 @@ func TestBetsService_PlaceABet(t *testing.T) {
 				},
 			},
 			args: args{
-				pbd: PlaceBetDTO{
-					BankID:    "id",
-					Market:    "market",
-					Event:     "event",
-					EventDate: time.Now(),
-					Value:     1,
-					Result:    1,
-					Odd:       1,
-					Free:      false,
-				},
+				pbd: PlaceBetDTO{},
 			},
 			want:    nil,
 			wantErr: true,
@@ -133,22 +105,13 @@ func TestBetsService_PlaceABet(t *testing.T) {
 				},
 			},
 			args: args{
-				pbd: PlaceBetDTO{
-					BankID:    "id",
-					Market:    "market",
-					Event:     "event",
-					EventDate: time.Now(),
-					Value:     1,
-					Result:    1,
-					Odd:       1,
-					Free:      false,
-				},
+				pbd: PlaceBetDTO{},
 			},
 			want:    nil,
 			wantErr: true,
 		},
 		{
-			name: "should return a complete bet if not occurs any fails ",
+			name: "should return a complete bet with an ID if not occurs any fails ",
 			fields: fields{
 				PbService: &PlaceABetServiceMock{
 					PlaceABetMockReturn: func() error {
@@ -170,16 +133,7 @@ func TestBetsService_PlaceABet(t *testing.T) {
 				},
 			},
 			args: args{
-				pbd: PlaceBetDTO{
-					BankID:    "id",
-					Market:    "market",
-					Event:     "event",
-					EventDate: time.Now(),
-					Value:     1,
-					Result:    1,
-					Odd:       1,
-					Free:      false,
-				},
+				pbd: PlaceBetDTO{},
 			},
 			want:    &domain.Bet{},
 			wantErr: false,
@@ -202,7 +156,6 @@ func TestBetsService_PlaceABet(t *testing.T) {
 				if got == nil || got.ID == "" {
 					t.Errorf("BetsService.PlaceABet() = %v, want %v", got, tt.want)
 				}
-
 			}
 		})
 	}
