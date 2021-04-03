@@ -18,7 +18,6 @@ func NewBank(id string, initialValue float64, createdAt time.Time) *Bank {
 		InitialValue: initialValue,
 		CurrentValue: initialValue,
 		CreatedAt:    createdAt,
-		UpdatedAt:    createdAt,
 	}
 }
 

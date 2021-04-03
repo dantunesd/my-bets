@@ -15,8 +15,8 @@ func TestBet_IsValidResult(t *testing.T) {
 		Value     float64
 		Result    float64
 		Odd       float64
-		CreatedAt time.Time
 		free      bool
+		CreatedAt time.Time
 	}
 	tests := []struct {
 		name   string
@@ -75,8 +75,8 @@ func TestBet_IsValidResult(t *testing.T) {
 				tt.fields.Value,
 				tt.fields.Result,
 				tt.fields.Odd,
-				tt.fields.CreatedAt,
 				tt.fields.free,
+				tt.fields.CreatedAt,
 			)
 			if got := b.IsValidResult(); got != tt.want {
 				t.Errorf("Bet.IsValidResult() = %v, want %v", got, tt.want)

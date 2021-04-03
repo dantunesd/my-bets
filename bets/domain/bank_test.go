@@ -4,13 +4,11 @@ import (
 	"reflect"
 	"testing"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 func TestNewBank(t *testing.T) {
 	createdAt := time.Now()
-	ID := uuid.New().String()
+	ID := "string-id"
 
 	type args struct {
 		ID           string
@@ -30,7 +28,6 @@ func TestNewBank(t *testing.T) {
 				InitialValue: 100,
 				CurrentValue: 100,
 				CreatedAt:    createdAt,
-				UpdatedAt:    createdAt,
 			},
 		},
 	}

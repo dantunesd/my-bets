@@ -11,11 +11,12 @@ type Bet struct {
 	Value     float64   `json:"value"`
 	Result    float64   `json:"result"`
 	Odd       float64   `json:"odd"`
-	CreatedAt time.Time `json:"created_at"`
 	Free      bool      `json:"free"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func NewBet(id, bankId, market, event string, eventDate time.Time, value, result, odd float64, createdAt time.Time, Free bool) *Bet {
+func NewBet(id, bankId, market, event string, eventDate time.Time, value, result, odd float64, free bool, createdAt time.Time) *Bet {
 	return &Bet{
 		ID:        id,
 		BankID:    bankId,
@@ -25,8 +26,8 @@ func NewBet(id, bankId, market, event string, eventDate time.Time, value, result
 		Value:     value,
 		Result:    result,
 		Odd:       odd,
+		Free:      free,
 		CreatedAt: createdAt,
-		Free:      false,
 	}
 }
 
