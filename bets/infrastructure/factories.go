@@ -26,7 +26,7 @@ func RedisClientFactory() *redis.Client {
 }
 
 func DatabaseFactory(dBName, tableName string) IDatabase {
-	return NewMongoDB(
+	return NewMongoDBAdapter(
 		MongoClientFactory(),
 		dBName,
 		tableName,
@@ -36,7 +36,7 @@ func DatabaseFactory(dBName, tableName string) IDatabase {
 func BankRepositoryFactory() application.IBanksRepository {
 	return NewBankRepositoryDecorator(
 		NewBankRepository(DatabaseFactory("my-bets", "banks")),
-		// NewInMemoryCacheAdapter(),
+		// NewMemoryCacheAdapter(),
 		NewRedisCacheAdapter(RedisClientFactory()),
 	)
 }

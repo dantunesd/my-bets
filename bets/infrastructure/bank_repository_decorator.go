@@ -6,11 +6,11 @@ import (
 )
 
 type BankRepositoryDecorator struct {
-	CacheRepository ICacheRepository
+	CacheRepository ICache
 	BanksRepository application.IBanksRepository
 }
 
-func NewBankRepositoryDecorator(banksRepository application.IBanksRepository, cacheRepository ICacheRepository) *BankRepositoryDecorator {
+func NewBankRepositoryDecorator(banksRepository application.IBanksRepository, cacheRepository ICache) *BankRepositoryDecorator {
 	return &BankRepositoryDecorator{
 		CacheRepository: cacheRepository,
 		BanksRepository: banksRepository,
@@ -22,7 +22,7 @@ func (b *BankRepositoryDecorator) CreateABank(bank domain.Bank) error {
 		return err
 	}
 
-	b.CacheRepository.Add(bank.ID, bank)
+	b.CacheRepository.Set(bank.ID, bank)
 	return nil
 }
 
@@ -38,7 +38,7 @@ func (b *BankRepositoryDecorator) GetABank(id string) (domain.Bank, error) {
 	if err != nil {
 		return storedBank, err
 	}
-	b.CacheRepository.Add(storedBank.ID, storedBank)
+	b.CacheRepository.Set(storedBank.ID, storedBank)
 	return storedBank, nil
 }
 
@@ -47,6 +47,6 @@ func (b *BankRepositoryDecorator) UpdateABank(bank domain.Bank) error {
 		return err
 	}
 
-	b.CacheRepository.Update(bank.ID, bank)
+	b.CacheRepository.Set(bank.ID, bank)
 	return nil
 }

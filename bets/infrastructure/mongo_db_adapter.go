@@ -8,38 +8,31 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-type IDatabase interface {
-	Create(content interface{}) error
-	Get(id, idFieldName string, output interface{}) error
-	Update(id string, idFieldName string, content interface{}) error
-	Delete(id, idFieldName string) error
-}
-
 //------------------------------------------------------------------------------
-// MongoDB Database
+// MongoDBAdapter Database
 //------------------------------------------------------------------------------
-type MongoDB struct {
+type MongoDBAdapter struct {
 	Client    *mongo.Client
 	DBName    string
 	TableName string
 }
 
-func NewMongoDB(client *mongo.Client, dbName, tableName string) IDatabase {
-	return &MongoDB{
+func NewMongoDBAdapter(client *mongo.Client, dbName, tableName string) IDatabase {
+	return &MongoDBAdapter{
 		Client:    client,
 		DBName:    dbName,
 		TableName: tableName,
 	}
 }
 
-func (d *MongoDB) Create(content interface{}) error {
+func (d *MongoDBAdapter) Create(content interface{}) error {
 	collection := d.Client.Database(d.DBName).Collection(d.TableName)
 
 	_, err := collection.InsertOne(context.TODO(), content)
 	return err
 }
 
-func (d *MongoDB) Get(id, idFieldName string, output interface{}) error {
+func (d *MongoDBAdapter) Get(id, idFieldName string, output interface{}) error {
 	collection := d.Client.Database(d.DBName).Collection(d.TableName)
 
 	filter := bson.D{primitive.E{Key: idFieldName, Value: id}}
@@ -47,7 +40,7 @@ func (d *MongoDB) Get(id, idFieldName string, output interface{}) error {
 	return collection.FindOne(context.TODO(), filter).Decode(output)
 }
 
-func (d *MongoDB) Update(id string, idFieldName string, content interface{}) error {
+func (d *MongoDBAdapter) Update(id string, idFieldName string, content interface{}) error {
 	collection := d.Client.Database(d.DBName).Collection(d.TableName)
 
 	filter := bson.D{primitive.E{Key: idFieldName, Value: id}}
@@ -59,7 +52,7 @@ func (d *MongoDB) Update(id string, idFieldName string, content interface{}) err
 	return err
 }
 
-func (d *MongoDB) Delete(id, idFieldName string) error {
+func (d *MongoDBAdapter) Delete(id, idFieldName string) error {
 	collection := d.Client.Database(d.DBName).Collection(d.TableName)
 
 	filter := bson.D{primitive.E{Key: idFieldName, Value: id}}
