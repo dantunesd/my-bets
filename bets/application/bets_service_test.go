@@ -8,9 +8,9 @@ import (
 
 func TestBetsService_PlaceABet(t *testing.T) {
 	type fields struct {
-		PbService      IPlaceABetService
-		BankRepository IBanksRepository
-		BetRepository  IBetsRepository
+		PbService      domain.IPlaceABetService
+		BankRepository domain.IBanksRepository
+		BetRepository  domain.IBetsRepository
 	}
 	type args struct {
 		pbd PlaceBetDTO
@@ -163,9 +163,9 @@ func TestBetsService_PlaceABet(t *testing.T) {
 
 func TestBetsService_UndoABet(t *testing.T) {
 	type fields struct {
-		PbService      IPlaceABetService
-		BankRepository IBanksRepository
-		BetRepository  IBetsRepository
+		PbService      domain.IPlaceABetService
+		BankRepository domain.IBanksRepository
+		BetRepository  domain.IBetsRepository
 	}
 	type args struct {
 		ID string

@@ -2,7 +2,16 @@ package domain
 
 import "errors"
 
+type IPlaceABetService interface {
+	PlaceABet(bet Bet, bank *Bank) error
+	UndoABet(bet Bet, bank *Bank) error
+}
+
 type PlaceABetService struct{}
+
+func NewPlaceABetService() *PlaceABetService {
+	return &PlaceABetService{}
+}
 
 func (p *PlaceABetService) PlaceABet(bet Bet, bank *Bank) error {
 

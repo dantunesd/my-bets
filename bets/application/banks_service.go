@@ -8,10 +8,10 @@ import (
 )
 
 type BanksService struct {
-	BankRepository IBanksRepository
+	BankRepository domain.IBanksRepository
 }
 
-func NewBankService(bankRepository IBanksRepository) *BanksService {
+func NewBankService(bankRepository domain.IBanksRepository) *BanksService {
 	return &BanksService{
 		BankRepository: bankRepository,
 	}

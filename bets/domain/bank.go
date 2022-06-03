@@ -4,6 +4,12 @@ import (
 	"time"
 )
 
+type IBanksRepository interface {
+	CreateABank(Bank) error
+	GetABank(id string) (Bank, error)
+	UpdateABank(Bank) error
+}
+
 type Bank struct {
 	ID           string    `bson:"_id" json:"id"`
 	InitialValue float64   `json:"initial_value"`

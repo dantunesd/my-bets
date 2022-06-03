@@ -1,7 +1,6 @@
-package infrastructure
+package repository
 
 import (
-	"my-bets/bets/application"
 	"my-bets/bets/domain"
 )
 
@@ -11,7 +10,7 @@ type BankRepository struct {
 	Database IDatabase
 }
 
-func NewBankRepository(database IDatabase) application.IBanksRepository {
+func NewBankRepository(database IDatabase) domain.IBanksRepository {
 	return &BankRepository{
 		Database: database,
 	}

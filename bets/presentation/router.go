@@ -8,13 +8,25 @@ import (
 	"github.com/go-chi/chi/middleware"
 )
 
-func HandlersFactory(banksService *application.BanksService, betsService *application.BetsService) http.Handler {
-	r := chi.NewRouter()
+type Router struct {
+	banksService *application.BanksService
+	betsService  *application.BetsService
+}
 
-	r.Use(middleware.Logger)
-	r.Use(middleware.Recoverer)
-	r.Route("/banks", BanksRouter(banksService))
-	r.Route("/bets", BetsRouter(betsService))
+func NewHandler(banksService *application.BanksService, betsService *application.BetsService) *Router {
+	return &Router{
+		banksService: banksService,
+		betsService:  betsService,
+	}
+}
 
-	return r
+func (r *Router) Create() http.Handler {
+	handler := chi.NewRouter()
+
+	handler.Use(middleware.Logger)
+	handler.Use(middleware.Recoverer)
+	handler.Route("/banks", BanksRouter(r.banksService))
+	handler.Route("/bets", BetsRouter(r.betsService))
+
+	return handler
 }

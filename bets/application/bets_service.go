@@ -8,12 +8,12 @@ import (
 )
 
 type BetsService struct {
-	PbService      IPlaceABetService
-	BankRepository IBanksRepository
-	BetRepository  IBetsRepository
+	PbService      domain.IPlaceABetService
+	BankRepository domain.IBanksRepository
+	BetRepository  domain.IBetsRepository
 }
 
-func NewBetsService(pbService IPlaceABetService, bankRepository IBanksRepository, betRepository IBetsRepository) *BetsService {
+func NewBetsService(pbService domain.IPlaceABetService, bankRepository domain.IBanksRepository, betRepository domain.IBetsRepository) *BetsService {
 	return &BetsService{
 		PbService:      pbService,
 		BankRepository: bankRepository,

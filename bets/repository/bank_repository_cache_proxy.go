@@ -1,23 +1,22 @@
-package infrastructure
+package repository
 
 import (
-	"my-bets/bets/application"
 	"my-bets/bets/domain"
 )
 
-type BankRepositoryDecorator struct {
+type BankRepositoryCacheProxy struct {
 	CacheRepository ICache
-	BanksRepository application.IBanksRepository
+	BanksRepository domain.IBanksRepository
 }
 
-func NewBankRepositoryDecorator(banksRepository application.IBanksRepository, cacheRepository ICache) application.IBanksRepository {
-	return &BankRepositoryDecorator{
+func NewBankRepositoryCacheProxy(banksRepository domain.IBanksRepository, cacheRepository ICache) domain.IBanksRepository {
+	return &BankRepositoryCacheProxy{
 		CacheRepository: cacheRepository,
 		BanksRepository: banksRepository,
 	}
 }
 
-func (b *BankRepositoryDecorator) CreateABank(bank domain.Bank) error {
+func (b *BankRepositoryCacheProxy) CreateABank(bank domain.Bank) error {
 	if err := b.BanksRepository.CreateABank((bank)); err != nil {
 		return err
 	}
@@ -26,7 +25,7 @@ func (b *BankRepositoryDecorator) CreateABank(bank domain.Bank) error {
 	return nil
 }
 
-func (b *BankRepositoryDecorator) GetABank(id string) (domain.Bank, error) {
+func (b *BankRepositoryCacheProxy) GetABank(id string) (domain.Bank, error) {
 	cachedBank := domain.Bank{}
 	existsInCache := b.CacheRepository.Get(id, &cachedBank)
 
@@ -42,7 +41,7 @@ func (b *BankRepositoryDecorator) GetABank(id string) (domain.Bank, error) {
 	return storedBank, nil
 }
 
-func (b *BankRepositoryDecorator) UpdateABank(bank domain.Bank) error {
+func (b *BankRepositoryCacheProxy) UpdateABank(bank domain.Bank) error {
 	if err := b.BanksRepository.UpdateABank(bank); err != nil {
 		return err
 	}

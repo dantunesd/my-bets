@@ -18,7 +18,7 @@ func TestBanksService_CreateABank(t *testing.T) {
 	}
 
 	type fields struct {
-		BankRepository IBanksRepository
+		BankRepository domain.IBanksRepository
 	}
 	type args struct {
 		initialValue float64
@@ -74,7 +74,7 @@ func TestBanksService_GetABank(t *testing.T) {
 	}
 
 	type fields struct {
-		BankRepository IBanksRepository
+		BankRepository domain.IBanksRepository
 	}
 	type args struct {
 		id string

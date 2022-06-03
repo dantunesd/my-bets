@@ -2,6 +2,12 @@ package domain
 
 import "time"
 
+type IBetsRepository interface {
+	CreateABet(Bet) error
+	GetABet(id string) (Bet, error)
+	DeleteABet(id string) error
+}
+
 type Bet struct {
 	ID        string    `bson:"_id" json:"id"`
 	BankID    string    `json:"bank_id"`
