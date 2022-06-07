@@ -26,7 +26,7 @@ func (h *HttpHandler) Create() http.Handler {
 	router.Use(middleware.Recoverer)
 
 	router.Post("/banks/", h.banksHandler.CreateBank())
-	router.Get("/banks", h.banksHandler.GetBank())
+	router.Get("/banks/{id}", h.banksHandler.GetBank())
 
 	router.Post("/bets/", h.betsHandler.PlaceABet())
 	router.Delete("/bets/{id}", h.betsHandler.UndoABet())
