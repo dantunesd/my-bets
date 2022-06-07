@@ -2,15 +2,16 @@ package application
 
 import (
 	"errors"
-	"my-bets/bets/domain"
+	"my-bets/bets/domain/bank"
+	"my-bets/bets/domain/bets"
 	"testing"
 )
 
 func TestBetsService_PlaceABet(t *testing.T) {
 	type fields struct {
-		PbService      domain.IPlaceABetService
-		BankRepository domain.IBanksRepository
-		BetRepository  domain.IBetsRepository
+		PbService      bets.IPlaceABetService
+		BankRepository bank.IBanksRepository
+		BetRepository  bets.IBetsRepository
 	}
 	type args struct {
 		pbd PlaceBetDTO
@@ -19,15 +20,15 @@ func TestBetsService_PlaceABet(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    *domain.Bet
+		want    *bets.Bet
 		wantErr bool
 	}{
 		{
 			name: "should return an error if BankRepository.GetABank fails",
 			fields: fields{
 				BankRepository: &BankRepositoryMock{
-					GetABankMockReturn: func() (domain.Bank, error) {
-						return domain.Bank{}, errors.New("something went wrong")
+					GetABankMockReturn: func() (bank.Bank, error) {
+						return bank.Bank{}, errors.New("something went wrong")
 					},
 				},
 			},
@@ -41,8 +42,8 @@ func TestBetsService_PlaceABet(t *testing.T) {
 			name: "should return an error if PbService.PlaceABet fails",
 			fields: fields{
 				BankRepository: &BankRepositoryMock{
-					GetABankMockReturn: func() (domain.Bank, error) {
-						return domain.Bank{}, nil
+					GetABankMockReturn: func() (bank.Bank, error) {
+						return bank.Bank{}, nil
 					},
 				},
 				PbService: &PlaceABetServiceMock{
@@ -61,8 +62,8 @@ func TestBetsService_PlaceABet(t *testing.T) {
 			name: "should return an error if BetRepository.CreateABet fails",
 			fields: fields{
 				BankRepository: &BankRepositoryMock{
-					GetABankMockReturn: func() (domain.Bank, error) {
-						return domain.Bank{}, nil
+					GetABankMockReturn: func() (bank.Bank, error) {
+						return bank.Bank{}, nil
 					},
 				},
 				PbService: &PlaceABetServiceMock{
@@ -96,8 +97,8 @@ func TestBetsService_PlaceABet(t *testing.T) {
 					},
 				},
 				BankRepository: &BankRepositoryMock{
-					GetABankMockReturn: func() (domain.Bank, error) {
-						return domain.Bank{}, nil
+					GetABankMockReturn: func() (bank.Bank, error) {
+						return bank.Bank{}, nil
 					},
 					UpdateABankMockReturn: func() error {
 						return errors.New("something went wrong")
@@ -124,8 +125,8 @@ func TestBetsService_PlaceABet(t *testing.T) {
 					},
 				},
 				BankRepository: &BankRepositoryMock{
-					GetABankMockReturn: func() (domain.Bank, error) {
-						return domain.Bank{}, nil
+					GetABankMockReturn: func() (bank.Bank, error) {
+						return bank.Bank{}, nil
 					},
 					UpdateABankMockReturn: func() error {
 						return nil
@@ -135,7 +136,7 @@ func TestBetsService_PlaceABet(t *testing.T) {
 			args: args{
 				pbd: PlaceBetDTO{},
 			},
-			want:    &domain.Bet{},
+			want:    &bets.Bet{},
 			wantErr: false,
 		},
 	}
@@ -163,9 +164,9 @@ func TestBetsService_PlaceABet(t *testing.T) {
 
 func TestBetsService_UndoABet(t *testing.T) {
 	type fields struct {
-		PbService      domain.IPlaceABetService
-		BankRepository domain.IBanksRepository
-		BetRepository  domain.IBetsRepository
+		PbService      bets.IPlaceABetService
+		BankRepository bank.IBanksRepository
+		BetRepository  bets.IBetsRepository
 	}
 	type args struct {
 		ID string
@@ -180,8 +181,8 @@ func TestBetsService_UndoABet(t *testing.T) {
 			name: "should return error if BetRepository.GetABet fails",
 			fields: fields{
 				BetRepository: &BetsRepositoryMock{
-					GetABetMockReturn: func() (domain.Bet, error) {
-						return domain.Bet{}, errors.New("something went wrong")
+					GetABetMockReturn: func() (bets.Bet, error) {
+						return bets.Bet{}, errors.New("something went wrong")
 					},
 				},
 			},
@@ -194,13 +195,13 @@ func TestBetsService_UndoABet(t *testing.T) {
 			name: "should return error if BankRepository.GetABank fails",
 			fields: fields{
 				BetRepository: &BetsRepositoryMock{
-					GetABetMockReturn: func() (domain.Bet, error) {
-						return domain.Bet{}, nil
+					GetABetMockReturn: func() (bets.Bet, error) {
+						return bets.Bet{}, nil
 					},
 				},
 				BankRepository: &BankRepositoryMock{
-					GetABankMockReturn: func() (domain.Bank, error) {
-						return domain.Bank{}, errors.New("something went wrong")
+					GetABankMockReturn: func() (bank.Bank, error) {
+						return bank.Bank{}, errors.New("something went wrong")
 					},
 				},
 			},
@@ -213,13 +214,13 @@ func TestBetsService_UndoABet(t *testing.T) {
 			name: "should return error if PbService.UndoABet fails",
 			fields: fields{
 				BetRepository: &BetsRepositoryMock{
-					GetABetMockReturn: func() (domain.Bet, error) {
-						return domain.Bet{}, nil
+					GetABetMockReturn: func() (bets.Bet, error) {
+						return bets.Bet{}, nil
 					},
 				},
 				BankRepository: &BankRepositoryMock{
-					GetABankMockReturn: func() (domain.Bank, error) {
-						return domain.Bank{}, nil
+					GetABankMockReturn: func() (bank.Bank, error) {
+						return bank.Bank{}, nil
 					},
 				},
 				PbService: &PlaceABetServiceMock{
@@ -237,16 +238,16 @@ func TestBetsService_UndoABet(t *testing.T) {
 			name: "should return error if BetRepository.DeleteABet fails",
 			fields: fields{
 				BetRepository: &BetsRepositoryMock{
-					GetABetMockReturn: func() (domain.Bet, error) {
-						return domain.Bet{}, nil
+					GetABetMockReturn: func() (bets.Bet, error) {
+						return bets.Bet{}, nil
 					},
 					DeleteABetMockReturn: func() error {
 						return errors.New("something went wrong")
 					},
 				},
 				BankRepository: &BankRepositoryMock{
-					GetABankMockReturn: func() (domain.Bank, error) {
-						return domain.Bank{}, nil
+					GetABankMockReturn: func() (bank.Bank, error) {
+						return bank.Bank{}, nil
 					},
 				},
 				PbService: &PlaceABetServiceMock{
@@ -264,16 +265,16 @@ func TestBetsService_UndoABet(t *testing.T) {
 			name: "should return error if BankRepository.UpdateABank fails",
 			fields: fields{
 				BetRepository: &BetsRepositoryMock{
-					GetABetMockReturn: func() (domain.Bet, error) {
-						return domain.Bet{}, nil
+					GetABetMockReturn: func() (bets.Bet, error) {
+						return bets.Bet{}, nil
 					},
 					DeleteABetMockReturn: func() error {
 						return nil
 					},
 				},
 				BankRepository: &BankRepositoryMock{
-					GetABankMockReturn: func() (domain.Bank, error) {
-						return domain.Bank{}, nil
+					GetABankMockReturn: func() (bank.Bank, error) {
+						return bank.Bank{}, nil
 					},
 					UpdateABankMockReturn: func() error {
 						return errors.New("something went wrong")
@@ -294,16 +295,16 @@ func TestBetsService_UndoABet(t *testing.T) {
 			name: "should return nil if all functions not fails",
 			fields: fields{
 				BetRepository: &BetsRepositoryMock{
-					GetABetMockReturn: func() (domain.Bet, error) {
-						return domain.Bet{}, nil
+					GetABetMockReturn: func() (bets.Bet, error) {
+						return bets.Bet{}, nil
 					},
 					DeleteABetMockReturn: func() error {
 						return nil
 					},
 				},
 				BankRepository: &BankRepositoryMock{
-					GetABankMockReturn: func() (domain.Bank, error) {
-						return domain.Bank{}, nil
+					GetABankMockReturn: func() (bank.Bank, error) {
+						return bank.Bank{}, nil
 					},
 					UpdateABankMockReturn: func() error {
 						return nil
@@ -340,25 +341,25 @@ type PlaceABetServiceMock struct {
 	UndoABetMockReturn  func() error
 }
 
-func (p *PlaceABetServiceMock) PlaceABet(bet domain.Bet, bank *domain.Bank) error {
+func (p *PlaceABetServiceMock) PlaceABet(bet bets.Bet, bank *bank.Bank) error {
 	return p.PlaceABetMockReturn()
 }
 
-func (p *PlaceABetServiceMock) UndoABet(bet domain.Bet, bank *domain.Bank) error {
+func (p *PlaceABetServiceMock) UndoABet(bet bets.Bet, bank *bank.Bank) error {
 	return p.UndoABetMockReturn()
 }
 
 type BetsRepositoryMock struct {
 	CreateABetMockReturn func() error
-	GetABetMockReturn    func() (domain.Bet, error)
+	GetABetMockReturn    func() (bets.Bet, error)
 	DeleteABetMockReturn func() error
 }
 
-func (b *BetsRepositoryMock) CreateABet(domain.Bet) error {
+func (b *BetsRepositoryMock) CreateABet(bets.Bet) error {
 	return b.CreateABetMockReturn()
 }
 
-func (b *BetsRepositoryMock) GetABet(id string) (domain.Bet, error) {
+func (b *BetsRepositoryMock) GetABet(id string) (bets.Bet, error) {
 	return b.GetABetMockReturn()
 }
 

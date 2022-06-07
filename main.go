@@ -3,10 +3,11 @@ package main
 import (
 	"context"
 	"my-bets/bets/application"
-	"my-bets/bets/domain"
-	"my-bets/bets/infrastructure"
+	"my-bets/bets/domain/bets"
+	"my-bets/bets/infrastructure/cache"
+	"my-bets/bets/infrastructure/database"
+	"my-bets/bets/infrastructure/repository"
 	"my-bets/bets/presentation"
-	"my-bets/bets/repository"
 	"net/http"
 
 	"github.com/go-redis/redis/v8"
@@ -16,28 +17,38 @@ import (
 
 func main() {
 	mongoClient, _ := mongo.Connect(context.TODO(), options.Client().ApplyURI("mongodb://root:example@localhost:27017"))
-
 	redisClient := redis.NewClient(&redis.Options{Addr: "localhost:6379", Password: "", DB: 0})
 
 	banksRepository := repository.NewBankRepositoryCacheProxy(
 		repository.NewBankRepository(
-			infrastructure.NewLoggableDBDecorator(
-				infrastructure.NewMongoDBAdapter(mongoClient, "my-bets", "banks"),
+			database.NewLoggableDBDecorator(
+				database.NewMongoDBAdapter(mongoClient, "my-bets", "banks"),
 			),
 		),
-		infrastructure.NewRedisCacheAdapter(redisClient),
+		cache.NewRedisCacheAdapter(redisClient),
 	)
 
 	betsRepository := repository.NewBetRepository(
-		infrastructure.NewLoggableDBDecorator(
-			infrastructure.NewMongoDBAdapter(mongoClient, "my-bets", "bets"),
+		database.NewLoggableDBDecorator(
+			database.NewMongoDBAdapter(mongoClient, "my-bets", "bets"),
 		),
 	)
 
+	placeBetsService := bets.NewPlaceABetService()
 	banksService := application.NewBankService(banksRepository)
-	betsService := application.NewBetsService(domain.NewPlaceABetService(), banksRepository, betsRepository)
+	betsService := application.NewBetsService(
+		placeBetsService,
+		banksRepository,
+		betsRepository,
+	)
 
-	router := presentation.NewHandler(banksService, betsService)
+	banksHandler := presentation.NewBanksHandler(banksService)
+	betsHandler := presentation.NewBetsHandler(betsService)
 
-	http.ListenAndServe(":8080", router.Create())
+	httpHandler := presentation.NewHandler(
+		banksHandler,
+		betsHandler,
+	)
+
+	http.ListenAndServe(":8080", httpHandler.Create())
 }

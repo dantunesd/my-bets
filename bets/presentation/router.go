@@ -1,32 +1,35 @@
 package presentation
 
 import (
-	"my-bets/bets/application"
 	"net/http"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 )
 
-type Router struct {
-	banksService *application.BanksService
-	betsService  *application.BetsService
+type HttpHandler struct {
+	banksHandler *BanksHandler
+	betsHandler  *BetsHandler
 }
 
-func NewHandler(banksService *application.BanksService, betsService *application.BetsService) *Router {
-	return &Router{
-		banksService: banksService,
-		betsService:  betsService,
+func NewHandler(banksHandler *BanksHandler, betsHandler *BetsHandler) *HttpHandler {
+	return &HttpHandler{
+		banksHandler: banksHandler,
+		betsHandler:  betsHandler,
 	}
 }
 
-func (r *Router) Create() http.Handler {
-	handler := chi.NewRouter()
+func (h *HttpHandler) Create() http.Handler {
+	router := chi.NewRouter()
 
-	handler.Use(middleware.Logger)
-	handler.Use(middleware.Recoverer)
-	handler.Route("/banks", BanksRouter(r.banksService))
-	handler.Route("/bets", BetsRouter(r.betsService))
+	router.Use(middleware.Logger)
+	router.Use(middleware.Recoverer)
 
-	return handler
+	router.Post("/banks/", h.banksHandler.CreateBank())
+	router.Get("/banks", h.banksHandler.GetBank())
+
+	router.Post("/bets/", h.betsHandler.PlaceABet())
+	router.Delete("/bets/{id}", h.betsHandler.UndoABet())
+
+	return router
 }

@@ -2,14 +2,14 @@ package application
 
 import (
 	"errors"
-	"my-bets/bets/domain"
+	"my-bets/bets/domain/bank"
 	"reflect"
 	"testing"
 	"time"
 )
 
 func TestBanksService_CreateABank(t *testing.T) {
-	bank := domain.Bank{
+	bankWant := bank.Bank{
 		ID:           "id",
 		InitialValue: 200,
 		CurrentValue: 200,
@@ -18,7 +18,7 @@ func TestBanksService_CreateABank(t *testing.T) {
 	}
 
 	type fields struct {
-		BankRepository domain.IBanksRepository
+		BankRepository bank.IBanksRepository
 	}
 	type args struct {
 		initialValue float64
@@ -27,7 +27,7 @@ func TestBanksService_CreateABank(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    domain.Bank
+		want    bank.Bank
 		wantErr bool
 	}{
 		{
@@ -42,7 +42,7 @@ func TestBanksService_CreateABank(t *testing.T) {
 			args: args{
 				initialValue: 200,
 			},
-			want:    bank,
+			want:    bankWant,
 			wantErr: false,
 		},
 	}
@@ -65,7 +65,7 @@ func TestBanksService_CreateABank(t *testing.T) {
 }
 
 func TestBanksService_GetABank(t *testing.T) {
-	bank := domain.Bank{
+	bankWant := bank.Bank{
 		ID:           "id",
 		InitialValue: 200,
 		CurrentValue: 200,
@@ -74,7 +74,7 @@ func TestBanksService_GetABank(t *testing.T) {
 	}
 
 	type fields struct {
-		BankRepository domain.IBanksRepository
+		BankRepository bank.IBanksRepository
 	}
 	type args struct {
 		id string
@@ -83,37 +83,37 @@ func TestBanksService_GetABank(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    domain.Bank
+		want    bank.Bank
 		wantErr bool
 	}{
 		{
 			name: "should returns the bank retrieved from repository",
 			fields: fields{
 				BankRepository: &BankRepositoryMock{
-					GetABankMockReturn: func() (domain.Bank, error) {
-						return bank, nil
+					GetABankMockReturn: func() (bank.Bank, error) {
+						return bankWant, nil
 					},
 				},
 			},
 			args: args{
 				id: "id",
 			},
-			want:    bank,
+			want:    bankWant,
 			wantErr: false,
 		},
 		{
 			name: "should returns the error the retrieved from repository",
 			fields: fields{
 				BankRepository: &BankRepositoryMock{
-					GetABankMockReturn: func() (domain.Bank, error) {
-						return domain.Bank{}, errors.New("failed to get data from db")
+					GetABankMockReturn: func() (bank.Bank, error) {
+						return bank.Bank{}, errors.New("failed to get data from db")
 					},
 				},
 			},
 			args: args{
 				id: "id",
 			},
-			want:    domain.Bank{},
+			want:    bank.Bank{},
 			wantErr: true,
 		},
 	}
@@ -136,18 +136,18 @@ func TestBanksService_GetABank(t *testing.T) {
 
 type BankRepositoryMock struct {
 	CreateABankMockReturn func() error
-	GetABankMockReturn    func() (domain.Bank, error)
+	GetABankMockReturn    func() (bank.Bank, error)
 	UpdateABankMockReturn func() error
 }
 
-func (b *BankRepositoryMock) CreateABank(bank domain.Bank) error {
+func (b *BankRepositoryMock) CreateABank(bank bank.Bank) error {
 	return b.CreateABankMockReturn()
 }
 
-func (b *BankRepositoryMock) GetABank(id string) (domain.Bank, error) {
+func (b *BankRepositoryMock) GetABank(id string) (bank.Bank, error) {
 	return b.GetABankMockReturn()
 }
 
-func (b *BankRepositoryMock) UpdateABank(bank domain.Bank) error {
+func (b *BankRepositoryMock) UpdateABank(bank bank.Bank) error {
 	return b.UpdateABankMockReturn()
 }

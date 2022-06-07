@@ -1,19 +1,20 @@
 package application
 
 import (
-	"my-bets/bets/domain"
+	"my-bets/bets/domain/bank"
+	"my-bets/bets/domain/bets"
 	"time"
 
 	"github.com/google/uuid"
 )
 
 type BetsService struct {
-	PbService      domain.IPlaceABetService
-	BankRepository domain.IBanksRepository
-	BetRepository  domain.IBetsRepository
+	PbService      bets.IPlaceABetService
+	BankRepository bank.IBanksRepository
+	BetRepository  bets.IBetsRepository
 }
 
-func NewBetsService(pbService domain.IPlaceABetService, bankRepository domain.IBanksRepository, betRepository domain.IBetsRepository) *BetsService {
+func NewBetsService(pbService bets.IPlaceABetService, bankRepository bank.IBanksRepository, betRepository bets.IBetsRepository) *BetsService {
 	return &BetsService{
 		PbService:      pbService,
 		BankRepository: bankRepository,
@@ -32,8 +33,8 @@ type PlaceBetDTO struct {
 	Free      bool      `json:"free"`
 }
 
-func (b *BetsService) PlaceABet(pbd PlaceBetDTO) (*domain.Bet, error) {
-	bet := domain.Bet{
+func (b *BetsService) PlaceABet(pbd PlaceBetDTO) (*bets.Bet, error) {
+	bet := bets.Bet{
 		ID:        uuid.NewString(),
 		BankID:    pbd.BankID,
 		Market:    pbd.Market,
